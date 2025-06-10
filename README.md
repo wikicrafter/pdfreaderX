@@ -38,7 +38,7 @@ This application is designed for accessibility and convenience, making PDF conte
 
 ## 🛠️ How It Works (Technical Deep Dive)
 
-This application is a single-page HTML file (`index.html`) that combines HTML for structure, CSS (via Tailwind CSS) for styling, and JavaScript for all its dynamic functionality.
+This application is a single-page HTML file (`pdfreaderX.html`) that combines HTML for structure, CSS (via Tailwind CSS) for styling, and JavaScript for all its dynamic functionality.
 
 ### 1. PDF Loading & Rendering
 
@@ -97,8 +97,8 @@ To run this PDF reader locally, follow these simple steps:
     ```
     
 
-2.  **Open `index.html` in your web browser:**
-    Simply double-click the `index.html` file. Most modern browsers will execute the JavaScript directly.
+2.  **Open `pdfreaderX.html` in your web browser:**
+    Simply double-click the `pdfreaderX.html` file. Most modern browsers will execute the JavaScript directly.
 
 3.  **Explore the features:**
     * The demo PDF will load automatically from the default URL.
