@@ -118,7 +118,7 @@
         <div class="flex flex-col sm:flex-row items-center gap-4">
             <label for="pdfInput" class="text-sm font-medium text-gray-700 w-full sm:w-auto">Load PDF (URL):</label>
             <input type="text" id="pdfInput" value="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-                   class="flex-grow py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    class="flex-grow py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             <button id="loadPdfUrlBtn" class="bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 w-full sm:w-auto">
                 Load from URL
             </button>
@@ -127,7 +127,7 @@
         <div class="flex flex-col sm:flex-row items-center gap-4">
             <label for="pdfFileInput" class="text-sm font-medium text-gray-700 w-full sm:w-auto">Load PDF (Local File):</label>
             <input type="file" id="pdfFileInput" accept=".pdf"
-                   class="flex-grow py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-800">
+                    class="flex-grow py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-800">
             <button id="loadPdfFileBtn" class="bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 w-full sm:w-auto">
                 Load from File
             </button>
@@ -156,7 +156,7 @@
         <div class="flex flex-col sm:flex-row items-center gap-4">
             <label for="gotoPageInput" class="text-sm font-medium text-gray-700 w-full sm:w-auto">Go to Page:</label>
             <input type="number" id="gotoPageInput" value="1" min="1"
-                   class="flex-grow py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    class="flex-grow py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             <button id="gotoPageBtn" class="bg-purple-600 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 w-full sm:w-auto">
                 Go to Page
             </button>
@@ -233,25 +233,53 @@
         let pdfDoc = null;
         let currentPageNum = 1;
         let readingSpeed = 1.0;
-        let selectedVoice = null;
-        let currentUtterance = null;
+        let selectedVoice = null; // Will store the selected SpeechSynthesisVoice object
+        let currentUtterance = null; // Stores the currently active SpeechSynthesisUtterance
         let synth = window.speechSynthesis;
-        let textItems = [];
+        let textItems = []; // Stores text items from PDF.js
         let currentHighlightedSpans = []; // For TTS highlighting
-        let currentUserSelectionHighlightSpans = []; // New array for user selection highlights
+        let currentUserSelectionHighlightSpans = []; // For user selection highlighting
 
         // --- Utility Functions ---
+        /**
+         * Displays a message to the user.
+         * @param {string} msg - The message to display.
+         * @param {'info' | 'error'} [type='info'] - The type of message (info or error).
+         */
         function showMessage(msg, type = 'info') {
             messageDisplay.textContent = msg;
             messageDisplay.className = `text-center text-sm mt-2 ${type === 'error' ? 'text-red-600' : 'text-gray-600'}`;
         }
 
+        /**
+         * Clears the displayed message.
+         */
         function clearMessage() {
             messageDisplay.textContent = '';
             messageDisplay.className = '';
         }
 
+        /**
+         * Attempts to find and return the currently selected voice object from the live voice list.
+         * This is crucial to ensure we're using a valid, active voice object for utterances.
+         * @returns {SpeechSynthesisVoice | null} The live SpeechSynthesisVoice object or null if not found.
+         */
+        function getLiveSelectedVoice() {
+            if (!selectedVoice) return null; // No voice selected globally
+
+            const voices = synth.getVoices();
+            // Find the voice by its unique identifier (name and lang combination is usually robust)
+            const liveVoice = voices.find(voice => 
+                voice.name === selectedVoice.name && voice.lang === selectedVoice.lang
+            );
+            return liveVoice || null;
+        }
+
         // --- Voice Selection ---
+        /**
+         * Populates the voice selection dropdown and attempts to set a preferred default voice.
+         * This function prioritizes "Microsoft Andrew Online (Natural) English (United States)".
+         */
         function populateVoiceList() {
             const voices = synth.getVoices().sort((a, b) => {
                 const aname = a.name.toUpperCase();
@@ -263,33 +291,41 @@
 
             voiceSelect.innerHTML = ''; // Clear existing options
 
-            let defaultVoiceOption = null;
-            const preferredVoiceName = "Microsoft Andrew Online (Natural)"; // Specific target voice
+            let initialDefaultVoice = null;
+            const preferredVoiceName = "Microsoft Andrew Online (Natural)";
+            const preferredVoiceLang = "en-US"; // Use exact match for language
 
-            // First, try to find the exact preferred voice
-            defaultVoiceOption = voices.find(voice => voice.name === preferredVoiceName && voice.lang.startsWith('en-US'));
+            // Priority 1: Try to find the exact preferred voice by name and exact language
+            initialDefaultVoice = voices.find(voice => 
+                voice.name === preferredVoiceName && voice.lang === preferredVoiceLang
+            );
 
-            // If not found, fall back to any en-US voice
-            if (!defaultVoiceOption) {
-                defaultVoiceOption = voices.find(voice => voice.lang.startsWith('en-US') && !voice.default);
+            // Priority 2: If not found, fall back to any voice that matches the preferred name, regardless of specific country code (e.g., en-GB vs en-US)
+            if (!initialDefaultVoice) {
+                initialDefaultVoice = voices.find(voice => voice.name === preferredVoiceName && voice.lang.startsWith('en'));
             }
 
-            // If still not found, fall back to the browser's default voice
-            if (!defaultVoiceOption) {
-                defaultVoiceOption = voices.find(voice => voice.default);
+            // Priority 3: If still not found, fall back to any en-US voice that isn't explicitly marked as default (to find alternatives)
+            if (!initialDefaultVoice) {
+                initialDefaultVoice = voices.find(voice => voice.lang === preferredVoiceLang && !voice.default);
             }
 
-            // Finally, if no specific default is found, pick the first available
-            if (!defaultVoiceOption && voices.length > 0) {
-                defaultVoiceOption = voices[0];
+            // Priority 4: If still not found, fall back to the browser's designated default voice
+            if (!initialDefaultVoice) {
+                initialDefaultVoice = voices.find(voice => voice.default);
             }
 
-
+            // Priority 5: Finally, if no specific default is found, pick the first available voice
+            if (!initialDefaultVoice && voices.length > 0) {
+                initialDefaultVoice = voices[0];
+            }
+            
+            // Add options to the dropdown
             voices.forEach((voice) => {
                 const option = document.createElement('option');
                 option.textContent = `${voice.name} (${voice.lang})`;
                 if (voice.default) {
-                    option.textContent += ' — DEFAULT';
+                    option.textContent += ' — DEFAULT BROWSER VOICE'; // Clarify browser default
                 }
                 option.setAttribute('data-lang', voice.lang);
                 option.setAttribute('data-name', voice.name);
@@ -297,10 +333,10 @@
                 voiceSelect.appendChild(option);
             });
 
-            // Set the selected value in the dropdown and the selectedVoice variable
-            if (defaultVoiceOption) {
-                voiceSelect.value = defaultVoiceOption.name;
-                selectedVoice = defaultVoiceOption;
+            // Set the selected value in the dropdown and the global selectedVoice variable
+            if (initialDefaultVoice) {
+                voiceSelect.value = initialDefaultVoice.name;
+                selectedVoice = initialDefaultVoice; // This is the key: update the global variable
             } else {
                 voiceSelect.innerHTML = '<option value="">No voices available</option>';
                 selectedVoice = null;
@@ -316,10 +352,14 @@
         // Populate voices when they are loaded (can be asynchronous)
         synth.onvoiceschanged = populateVoiceList;
 
-        // Initial populate in case voices are already loaded
+        // Initial populate in case voices are already loaded on page load
         populateVoiceList();
 
         // --- PDF Loading and Rendering ---
+        /**
+         * Loads a PDF document from a URL or ArrayBuffer.
+         * @param {string | ArrayBuffer} source - The PDF URL or ArrayBuffer data.
+         */
         async function loadPdf(source) {
             clearMessage();
             showMessage('Loading PDF...');
@@ -330,13 +370,13 @@
                 } else if (source instanceof ArrayBuffer) { // Source is an ArrayBuffer (from local file)
                     loadingTask = pdfjsLib.getDocument({ data: source });
                 } else {
-                    throw new Error("Invalid PDF source provided.");
+                    throw new Error("Invalid PDF source provided. Must be a URL string or ArrayBuffer.");
                 }
                 
                 pdfDoc = await loadingTask.promise;
                 currentPageNum = 1; // Reset to first page
                 pageInfo.textContent = `Page ${currentPageNum} of ${pdfDoc.numPages}`;
-                gotoPageInput.max = pdfDoc.numPages;
+                gotoPageInput.max = pdfDoc.numPages; // Set max for page input
                 showMessage(`PDF loaded (${pdfDoc.numPages} pages). Rendering page ${currentPageNum}...`);
                 await renderPage(currentPageNum);
             } catch (error) {
@@ -345,6 +385,10 @@
             }
         }
 
+        /**
+         * Renders a specific page of the loaded PDF.
+         * @param {number} pageNum - The page number to render.
+         */
         async function renderPage(pageNum) {
             if (!pdfDoc) return;
 
@@ -352,13 +396,15 @@
             stopSpeech();
             removeUserSelectionHighlight(); 
 
-            // Clear previous text layer and highlights
+            // Clear previous text layer and TTS highlights
             textLayerDiv.innerHTML = '';
             currentHighlightedSpans = []; 
 
             try {
                 const page = await pdfDoc.getPage(pageNum);
-                const viewport = page.getViewport({ scale: 1.5 });
+                // Adjust scale based on current container width for responsiveness
+                const desiredWidth = pdfCanvas.offsetWidth; 
+                const viewport = page.getViewport({ scale: desiredWidth / page.getViewport({ scale: 1 }).width });
 
                 // Set canvas dimensions
                 pdfCanvas.height = viewport.height;
@@ -371,35 +417,38 @@
                 };
                 await page.render(renderContext).promise;
 
-                // --- Render Text Layer for Selection ---
+                // --- Render Text Layer for Selection and Highlighting ---
                 const textContent = await page.getTextContent();
-                textItems = textContent.items;
+                textItems = textContent.items; // Store text items for highlighting logic
 
-                const textLayerViewport = viewport.clone({ scale: 1 });
+                // Adjust text layer dimensions to match the canvas's rendered size
+                textLayerDiv.style.width = `${pdfCanvas.offsetWidth}px`;
+                textLayerDiv.style.height = `${pdfCanvas.offsetHeight}px`;
                 
-                textLayerDiv.style.width = `${viewport.width}px`;
-                textLayerDiv.style.height = `${viewport.height}px`;
-
-                // Calculate the actual scale between canvas and text layer for correct positioning
-                const scaleX = pdfCanvas.offsetWidth / pdfCanvas.width;
-                const scaleY = pdfCanvas.offsetHeight / pdfCanvas.height;
+                // Get the actual scale of the rendered PDF on the canvas relative to its original size
+                // This is crucial for correctly positioning text elements
+                const canvasRenderedScaleX = pdfCanvas.offsetWidth / viewport.width;
+                const canvasRenderedScaleY = pdfCanvas.offsetHeight / viewport.height;
                 
                 textItems.forEach(item => {
                     const textDiv = document.createElement('div');
                     const { str, dir, width, height, transform } = item;
 
+                    // Apply the PDF.js text item's transformation matrix
+                    // Adjust transform values by the canvas's rendered scale to match positions
                     const [a, b, c, d, e, f] = transform;
-
-                    textDiv.style.transform = `matrix(${a}, ${b}, ${c}, ${d}, ${e * scaleX}, ${f * scaleY})`;
-                    textDiv.style.fontSize = `${item.height * textLayerViewport.scale * scaleY}px`;
+                    textDiv.style.transform = `matrix(${a}, ${b}, ${c}, ${d}, ${e * canvasRenderedScaleX}, ${f * canvasRenderedScaleY})`;
+                    
+                    // Font size needs to be adjusted based on the initial viewport scale AND the canvas's final rendered scale
+                    textDiv.style.fontSize = `${item.height * viewport.scale * canvasRenderedScaleY}px`;
                     textDiv.style.fontFamily = item.fontName;
                     textDiv.style.direction = dir;
-                    textDiv.style.left = `${transform[4] * scaleX}px`;
-                    textDiv.style.top = `${transform[5] * scaleY}px`;
-                    textDiv.style.width = `${item.width * scaleX}px`;
-                    textDiv.style.height = `${item.height * scaleY}px`;
+                    textDiv.style.left = `${transform[4] * canvasRenderedScaleX}px`;
+                    textDiv.style.top = `${transform[5] * canvasRenderedScaleY}px`;
+                    textDiv.style.width = `${item.width * canvasRenderedScaleX}px`;
+                    textDiv.style.height = `${item.height * canvasRenderedScaleY}px`;
                     textDiv.textContent = str;
-                    textDiv.title = str;
+                    textDiv.title = str; // Add title for debugging/tooltip
 
                     textLayerDiv.appendChild(textDiv);
                 });
@@ -414,23 +463,32 @@
         }
 
         // --- Text-to-Speech (TTS) Functions ---
+        /**
+         * Speaks the given text using the selected voice and speed.
+         * Highlights words as they are spoken.
+         * @param {string} textToSpeak - The text content to speak.
+         */
         function speakText(textToSpeak) {
             if (!synth) {
                 showMessage("SpeechSynthesis not supported in this browser.", 'error');
                 return;
             }
-            if (!selectedVoice) {
-                showMessage("No voice selected. Please choose a voice from the dropdown.", 'error');
+            const liveVoice = getLiveSelectedVoice(); // Get the live voice object
+            if (!liveVoice) {
+                showMessage("Selected voice not found or not available. Please choose another voice.", 'error');
                 return;
             }
 
+            // Cancel any ongoing speech before starting a new one
             if (currentUtterance && synth.speaking) {
                 synth.cancel();
             }
 
             currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
             currentUtterance.rate = readingSpeed;
-            currentUtterance.voice = selectedVoice; // Set the selected voice
+            currentUtterance.voice = liveVoice; // Crucially, use the live voice object
+            console.log(`[speakText] Using voice: ${currentUtterance.voice ? currentUtterance.voice.name : 'None'}`);
+
 
             currentUtterance.onboundary = (event) => {
                 if (event.name === 'word') {
@@ -455,6 +513,9 @@
             showMessage(`Reading selected text...`);
         }
 
+        /**
+         * Pauses the current speech synthesis.
+         */
         function pauseSpeech() {
             if (synth && synth.speaking && !synth.paused) {
                 synth.pause();
@@ -466,6 +527,9 @@
             }
         }
 
+        /**
+         * Resumes the paused speech synthesis.
+         */
         function resumeSpeech() {
             if (synth && synth.paused) {
                 synth.resume();
@@ -477,6 +541,9 @@
             }
         }
 
+        /**
+         * Stops the current speech synthesis and clears highlights.
+         */
         function stopSpeech() {
             console.log("Attempting to stop speech.");
             if (synth) {
@@ -494,30 +561,53 @@
             showMessage("Reading stopped.");
         }
 
+        /**
+         * Reads the full text content of the current PDF page.
+         * Automatically advances to the next page upon completion.
+         */
         async function readFullPage() {
             if (!pdfDoc) {
                 showMessage("No PDF loaded.", 'error');
                 return;
             }
-            stopSpeech();
-            removeUserSelectionHighlight();
+            stopSpeech(); // Stop any ongoing speech
+            removeUserSelectionHighlight(); // Clear any existing user selection highlight
 
             let fullPageText = "";
             const textDivs = Array.from(textLayerDiv.children);
+            // Concatenate text content from all text layer divs, adding a space between them
+            // to simulate natural reading flow.
             textDivs.forEach((div, index) => {
                 fullPageText += div.textContent;
                 if (index < textDivs.length - 1) {
-                    fullPageText += " ";
+                    fullPageText += " "; // Add a space between text blocks
                 }
             });
 
             if (fullPageText.length > 0) {
                 const utterance = new SpeechSynthesisUtterance(fullPageText);
                 utterance.rate = readingSpeed;
-                utterance.voice = selectedVoice; // Set the selected voice
+                
+                const liveVoice = getLiveSelectedVoice(); // Get the live voice object
+                if (liveVoice) {
+                    utterance.voice = liveVoice; // Set the selected live voice
+                } else {
+                    showMessage("Selected voice not found or not available. Using browser default.", 'info');
+                    // As a final fallback, try to find *any* default voice if the selected one isn't available
+                    const defaultVoice = synth.getVoices().find(voice => voice.default || voice.lang.startsWith('en'));
+                    if (defaultVoice) {
+                        utterance.voice = defaultVoice;
+                    } else {
+                        showMessage("No voices found to read the page.", 'error');
+                        return; // Cannot read without a voice
+                    }
+                }
                 currentUtterance = utterance;
+                console.log(`[readFullPage] Using voice: ${currentUtterance.voice ? currentUtterance.voice.name : 'None'} for page ${currentPageNum}`);
+
 
                 utterance.onboundary = (event) => {
+                    // Highlight words as they are spoken
                     if (event.name === 'word') {
                         highlightWord(event.charIndex, event.charLength, utterance.text);
                     }
@@ -527,10 +617,11 @@
                     removeHighlights();
                     currentUtterance = null;
                     showMessage("Page reading finished. Checking for next page...");
+                    // If there are more pages, render the next one and continue reading
                     if (pdfDoc && currentPageNum < pdfDoc.numPages) {
                         currentPageNum++;
                         await renderPage(currentPageNum);
-                        readFullPage();
+                        readFullPage(); // Recursively call to read the next page
                     } else {
                         showMessage("Finished reading the entire document.");
                     }
@@ -546,11 +637,12 @@
                 synth.speak(utterance);
                 showMessage(`Reading current page... Page ${currentPageNum} of ${pdfDoc.numPages}`);
             } else {
-                showMessage("No text found on current page to read.", 'info');
+                showMessage("No text found on current page to read. Checking for next page...", 'info');
+                // If current page has no text, try to advance to the next page automatically
                 if (pdfDoc && currentPageNum < pdfDoc.numPages) {
                     currentPageNum++;
                     await renderPage(currentPageNum);
-                    readFullPage();
+                    readFullPage(); // Recursively call to read the next page
                 } else {
                     showMessage("Finished reading the entire document.");
                 }
@@ -558,34 +650,44 @@
         }
 
         // --- Highlighting Functions for TTS ---
+        /**
+         * Highlights the currently spoken word in the text layer.
+         * This function attempts to find the word's position within the displayed text divs.
+         * @param {number} charIndexInUtterance - The starting character index of the word within the full spoken text.
+         * @param {number} charLength - The length of the spoken word.
+         * @param {string} spokenText - The full text being spoken by the utterance.
+         */
         function highlightWord(charIndexInUtterance, charLength, spokenText) {
             console.log(`highlightWord called: index=${charIndexInUtterance}, length=${charLength}, word="${spokenText.substring(charIndexInUtterance, charIndexInUtterance + charLength)}"`);
             removeHighlights(); // Ensure previous TTS highlights are removed
 
             const spokenWord = spokenText.substring(charIndexInUtterance, charIndexInUtterance + charLength);
-
             const textDivs = Array.from(textLayerDiv.children);
-            let currentGlobalCharOffset = 0;
+            let currentGlobalCharOffset = 0; // Tracks character offset across concatenated text divs
 
+            // Iterate through each text div to find where the spoken word is located
             for (const textDiv of textDivs) {
                 const divText = textDiv.textContent;
 
-                // Find the first occurrence of the spoken word within this div's text content,
-                // adjusting the search start index based on the accumulated global offset.
+                // Determine the start index within the current div where the spoken word *could* begin.
+                // This accounts for the accumulating character offset from previous divs.
                 const searchStartIndexInDiv = Math.max(0, charIndexInUtterance - currentGlobalCharOffset);
                 const matchIndexInDiv = divText.indexOf(spokenWord, searchStartIndexInDiv);
                 
                 // Verify that the found match corresponds to the current word boundary event's global position.
-                // This handles cases where a word might appear multiple times on a page.
+                // This is important to ensure we highlight the correct instance of a word if it appears multiple times.
                 const globalMatchStart = currentGlobalCharOffset + matchIndexInDiv;
-                const globalMatchEnd = globalMatchStart + spokenWord.Wordlength;
+                const globalMatchEnd = globalMatchStart + spokenWord.length; 
 
+                // Check if the word was found in this div and if its global position matches the utterance event
                 if (matchIndexInDiv !== -1 && charIndexInUtterance >= globalMatchStart && charIndexInUtterance < globalMatchEnd) {
                     console.log(`  Found potential match in div: "${divText.substring(matchIndexInDiv, matchIndexInDiv + spokenWord.length)}"`);
-                    let currentTextNodeCharOffset = 0;
+                    let currentTextNodeCharOffset = 0; // Tracks character offset within the current div's text nodes
+
+                    // Iterate through the text nodes within the current div to find the precise text node
                     for (const node of textDiv.childNodes) {
                         if (node.nodeType === Node.TEXT_NODE) {
-                            const nodeTextContent = node.textContent; // Corrected variable name
+                            const nodeTextContent = node.textContent;
 
                             // Check if the word starts within this text node
                             if (matchIndexInDiv >= currentTextNodeCharOffset && 
@@ -594,8 +696,8 @@
                                 const relativeStartInNode = matchIndexInDiv - currentTextNodeCharOffset;
                                 const relativeEndInNode = relativeStartInNode + charLength;
 
-                                // Ensure the word does not spill into the next text node
-                                if (relativeEndInNode <= nodeTextContent.length) { // Corrected variable name
+                                // Ensure the entire word is contained within this single text node
+                                if (relativeEndInNode <= nodeTextContent.length) {
                                     const range = document.createRange();
                                     range.setStart(node, relativeStartInNode);
                                     range.setEnd(node, relativeEndInNode);
@@ -603,52 +705,64 @@
                                     const span = document.createElement('span');
                                     span.className = 'highlighted-word';
                                     try {
+                                        // Surround the matched word with a span for highlighting
                                         range.surroundContents(span);
                                         currentHighlightedSpans.push(span);
                                         console.log("  Applied precise highlight to span.");
-                                        return; // Word highlighted, exit function
+                                        return; // Word highlighted, exit function immediately
                                     } catch (e) {
+                                        // If surrounding fails (e.g., due to existing complex DOM structure), log warning
                                         console.warn("  SurroundContents failed on specific text node. Trying fallback.", e);
-                                        break; // Break inner loop, will fall through to highlight the whole div
+                                        break; // Break inner loop, will fall through to highlight the whole div as fallback
                                     }
                                 }
                             }
                             currentTextNodeCharOffset += nodeTextContent.length;
                         }
                     }
-                    // If we couldn't highlight the specific text node, highlight the entire div as a fallback
+                    // Fallback: If precise text node highlighting failed or the word spans multiple nodes,
+                    // highlight the entire containing div.
                     textDiv.classList.add('highlighted-word');
                     currentHighlightedSpans.push(textDiv);
                     console.log("  Applied fallback highlight to div.");
-                    return; // Word handled (either precisely or fallback), exit function
+                    return; // Word handled, exit function
                 }
+                // Account for the length of the current div's text and the space added between divs for speech
                 currentGlobalCharOffset += divText.length; 
-                // Account for the space added between divs for speech, if it's not the last div
-                if (divText.length > 0 && textDivs.indexOf(textDiv) < textDivs.length - 1) { 
-                    currentGlobalCharOffset += 1;
+                if (textDivs.indexOf(textDiv) < textDivs.length - 1) { // If it's not the last div
+                    currentGlobalCharOffset += 1; // Account for the space we added between divs
                 }
             }
             console.log("  No highlight applied for word: " + spokenWord);
         }
 
+        /**
+         * Removes all active TTS highlighting spans.
+         */
         function removeHighlights() {
             console.log("Removing TTS highlights. Spans to remove:", currentHighlightedSpans.length);
             currentHighlightedSpans.forEach(el => {
                 if (el.parentNode) {
+                    // If it's a span we created, unwrap its content and remove the span
                     if (el.classList.contains('highlighted-word') && el.nodeName === 'SPAN') {
-                         while (el.firstChild) {
+                        while (el.firstChild) {
                             el.parentNode.insertBefore(el.firstChild, el);
                         }
                         el.parentNode.removeChild(el);
                     } else if (el.classList.contains('highlighted-word')) { 
+                        // If it's a div (fallback highlight), just remove the class
                         el.classList.remove('highlighted-word');
                     }
                 }
             });
-            currentHighlightedSpans = [];
+            currentHighlightedSpans = []; // Clear the array
         }
 
         // --- Highlighting Functions for User Selection ---
+        /**
+         * Applies a highlight to the user's current text selection within the text layer.
+         * Clears any previous user selection highlights and active TTS highlights.
+         */
         function applyUserSelectionHighlight() {
             console.log("Applying user selection highlight.");
             removeUserSelectionHighlight(); // Clear previous user selection highlight
@@ -665,7 +779,6 @@
                 textDivs.forEach(textDiv => {
                     // Check if the textDiv node actually contains any part of the selection
                     if (originalRange.intersectsNode(textDiv)) {
-                        let currentTextNodeCharOffset = 0;
                         for (const node of textDiv.childNodes) {
                             if (node.nodeType === Node.TEXT_NODE) {
                                 const nodeTextContent = node.textContent;
@@ -673,26 +786,25 @@
                                 nodeRange.selectNodeContents(node);
 
                                 // Check if the current text node intersects with the user's selection
-                                // and that the intersection has content (not just a boundary)
                                 if (originalRange.compareBoundaryPoints(Range.END_TO_START, nodeRange) < 0 &&
                                     originalRange.compareBoundaryPoints(Range.START_TO_END, nodeRange) > 0) {
                                     
-                                    // Create a temporary range for the intersection
+                                    // Create a temporary range for the intersection within this text node
                                     const intersectionRange = document.createRange();
                                     
-                                    // Set intersection start
+                                    // Set intersection start point
                                     if (originalRange.startContainer === node) {
                                         intersectionRange.setStart(node, originalRange.startOffset);
                                     } else {
-                                        // If selection starts outside this node, but intersects, start from beginning of this node
+                                        // If selection starts before this node, the intersection starts at the beginning of this node
                                         intersectionRange.setStart(node, 0); 
                                     }
 
-                                    // Set intersection end
+                                    // Set intersection end point
                                     if (originalRange.endContainer === node) {
                                         intersectionRange.setEnd(node, originalRange.endOffset);
                                     } else {
-                                        // If selection ends outside this node, but intersects, end at end of this node
+                                        // If selection ends after this node, the intersection ends at the end of this node
                                         intersectionRange.setEnd(node, nodeTextContent.length); 
                                     }
 
@@ -710,7 +822,8 @@
                                             // Fallback to highlighting the entire div if precise wrapping fails
                                             textDiv.classList.add('user-selection-highlight');
                                             currentUserSelectionHighlightSpans.push(textDiv);
-                                            break; // Stop processing this div's nodes, move to next div
+                                            // Break from inner loop as we've handled highlighting for this div
+                                            break; 
                                         }
                                     }
                                 }
@@ -727,21 +840,26 @@
             }
         }
 
+        /**
+         * Removes all active user selection highlighting spans.
+         */
         function removeUserSelectionHighlight() {
             console.log("Removing user selection highlights. Spans to remove:", currentUserSelectionHighlightSpans.length);
             currentUserSelectionHighlightSpans.forEach(el => {
                 if (el.parentNode) {
+                    // If it's a span we created, unwrap its content and remove the span
                     if (el.classList.contains('user-selection-highlight') && el.nodeName === 'SPAN') {
-                         while (el.firstChild) {
+                        while (el.firstChild) {
                             el.parentNode.insertBefore(el.firstChild, el);
                         }
                         el.parentNode.removeChild(el);
                     } else if (el.classList.contains('user-selection-highlight')) { 
+                        // If it's a div (fallback highlight), just remove the class
                         el.classList.remove('user-selection-highlight');
                     }
                 }
             });
-            currentUserSelectionHighlightSpans = [];
+            currentUserSelectionHighlightSpans = []; // Clear the array
         }
 
         // --- Event Listeners ---
@@ -785,7 +903,6 @@
         });
 
         readCurrentPageBtn.addEventListener('click', readFullPage);
-
 
         playSelectedBtn.addEventListener('click', () => {
             stopSpeech(); // Stop any ongoing speech
@@ -879,12 +996,22 @@
         
         voiceSelect.addEventListener('change', (event) => {
             const selectedVoiceName = event.target.value;
-            const voices = synth.getVoices();
+            const voices = synth.getVoices(); // Re-fetch voices to ensure freshness
             selectedVoice = voices.find(voice => voice.name === selectedVoiceName) || null;
             if (selectedVoice) {
                 showMessage(`Voice set to: ${selectedVoice.name}`);
             } else {
                 showMessage("Selected voice not found.", 'error');
+            }
+            // If there's an active utterance, update its voice immediately
+            // This allows changing the voice mid-speak
+            if (currentUtterance) {
+                const liveVoice = getLiveSelectedVoice();
+                if (liveVoice) {
+                    currentUtterance.voice = liveVoice;
+                } else {
+                    console.warn("Could not find live voice for active utterance after selection change.");
+                }
             }
         });
 
@@ -907,10 +1034,12 @@
             }
         });
 
+        // Initial PDF load when the window loads
         window.onload = function() {
             loadPdf(pdfInput.value);
         };
 
+        // Re-render the page on window resize to ensure responsiveness of PDF and text layer
         window.addEventListener('resize', () => {
             if (pdfDoc) {
                 renderPage(currentPageNum);
