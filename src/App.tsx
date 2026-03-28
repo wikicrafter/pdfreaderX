@@ -30,8 +30,8 @@ export default function App() {
       <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
 
       {/* Top Navigation / Toolbar */}
-      <header className="h-16 flex items-center px-4 justify-between bg-white/80 backdrop-blur-md border-b shadow-sm z-30 relative">
-        <div className="flex items-center gap-4 min-w-[240px]">
+      <header className="h-16 flex items-center px-4 justify-between bg-white/80 backdrop-blur-md border-b shadow-sm z-30 relative shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4">
           <button
             onClick={toggleSideBar}
             className={`p-2 rounded-lg transition-all ${isSideBarOpen ? 'text-primary-600 bg-primary-50' : 'text-slate-400 hover:bg-slate-100'}`}
@@ -46,17 +46,17 @@ export default function App() {
                 <path d="M200 200L312 312M312 200L200 312" stroke="white" stroke-width="48" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </div>
-            <h1 className="text-xl font-black tracking-tighter text-slate-900">
-              pdf<span className="text-primary-600">readerX</span>
+            <h1 className="text-lg sm:text-xl font-black tracking-tighter text-slate-900 leading-none">
+              pdf<span className="text-primary-600 hidden xs:inline">readerX</span>
             </h1>
           </div>
         </div>
 
-        <div className="flex-1 max-w-2xl px-8">
+        <div className="hidden md:flex flex-1 justify-center px-8 overflow-hidden">
           <Toolbar />
         </div>
 
-        <div className="flex items-center gap-3 min-w-[240px] justify-end">
+        <div className="flex items-center gap-1 sm:gap-3 justify-end">
           <button
             onClick={() => setIsSettingsOpen(true)}
             className={`p-2.5 rounded-xl transition-all ${isSettingsOpen ? 'bg-primary-50 text-primary-600' : 'text-slate-400 hover:bg-white hover:text-slate-600 hover:shadow-sm'}`}
@@ -96,10 +96,35 @@ export default function App() {
           />
         </div>
       </header>
+      
+      {/* Mobile Floating Toolbar */}
+      <div className="md:hidden fixed bottom-12 left-0 w-full z-40 px-4 pointer-events-none">
+        <div className="flex justify-center pointer-events-auto">
+          <Toolbar />
+        </div>
+      </div>
 
       {/* Main Content Area */}
       <main className="flex-1 flex overflow-hidden relative">
-        <Sidebar />
+        {/* Mobile Backdrop */}
+        {(isSideBarOpen || isVoicePanelOpen) && (
+          <div 
+            className="md:hidden fixed inset-0 bg-slate-900/20 backdrop-blur-[2px] z-[40]" 
+            onClick={() => {
+              if (isSideBarOpen) toggleSideBar()
+              if (isVoicePanelOpen) toggleVoicePanel()
+            }}
+          />
+        )}
+
+        <div className={`
+          fixed md:relative inset-y-0 left-0 z-[45] md:z-20
+          transition-transform duration-300 ease-in-out
+          ${isSideBarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          ${!isSideBarOpen && 'md:hidden'}
+        `}>
+          <Sidebar />
+        </div>
 
         {/* Viewer Area */}
         <section className="flex-1 relative bg-slate-100 flex flex-col overflow-hidden">
@@ -109,19 +134,24 @@ export default function App() {
         </section>
 
         {/* Action Panel */}
-        {isVoicePanelOpen && (
-          <aside className="w-80 border-l bg-white/80 backdrop-blur-xl flex flex-col z-20 shadow-[-4px_0_12px_rgba(0,0,0,0.02)]">
+        <div className={`
+          fixed md:relative inset-y-0 right-0 z-[45] md:z-20
+          transition-transform duration-300 ease-in-out
+          ${isVoicePanelOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
+          ${!isVoicePanelOpen && 'md:hidden'}
+        `}>
+          <aside className="w-80 h-full border-l bg-white/80 backdrop-blur-xl flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.1)] md:shadow-[-4px_0_12px_rgba(0,0,0,0.02)]">
             <VoicePanel speech={speech} />
           </aside>
-        )}
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="h-8 border-t bg-white px-6 flex items-center justify-between text-[10px] text-slate-400 font-bold uppercase tracking-widest z-30">
+      <footer className="h-10 border-t bg-white px-6 flex items-center justify-between text-[10px] text-slate-400 font-bold uppercase tracking-widest z-30 shrink-0">
         <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /> System Online</span>
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /> <span className="hidden xs:inline">System Online</span></span>
         </div>
-        <div>pdfreaderX v1.0.0</div>
+        <div>v1.0.0</div>
       </footer>
     </div>
   )

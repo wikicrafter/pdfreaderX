@@ -45,7 +45,7 @@ export const usePdfStore = create<PdfState>((set) => ({
   numPages: 0,
   zoom: 1.0,
   rotation: 0,
-  isSideBarOpen: true,
+  isSideBarOpen: typeof window !== 'undefined' ? window.innerWidth > 1280 : false,
   selectedText: '',
   pdfDoc: null,
   speechRate: 1.0,
@@ -56,7 +56,7 @@ export const usePdfStore = create<PdfState>((set) => ({
   isSearching: false,
   maxPageSeen: 1,
   bookmarks: [],
-  isVoicePanelOpen: true,
+  isVoicePanelOpen: typeof window !== 'undefined' ? window.innerWidth > 1280 : false,
 
   setFile: (file) => set({ 
     file, 
@@ -67,7 +67,7 @@ export const usePdfStore = create<PdfState>((set) => ({
     searchResults: [],
     maxPageSeen: 1,
     bookmarks: [],
-    isVoicePanelOpen: true
+    isVoicePanelOpen: typeof window !== 'undefined' ? window.innerWidth > 1280 : false
   }),
   setPdfDoc: (pdfDoc) => set({ pdfDoc }),
   setPageNum: (pageNum) => set((state) => {

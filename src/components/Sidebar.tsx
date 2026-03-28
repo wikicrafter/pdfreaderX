@@ -9,7 +9,7 @@ import { BookmarksSidebar } from './BookmarksSidebar'
 type SidebarTab = 'thumbnails' | 'search' | 'bookmarks'
 
 export const Sidebar: React.FC = () => {
-  const { isSideBarOpen, numPages, pageNum, setPageNum, pdfDoc, toggleSideBar, maxPageSeen } = usePdfStore()
+  const { numPages, pageNum, setPageNum, pdfDoc, toggleSideBar, maxPageSeen } = usePdfStore()
   const [activeTab, setActiveTab] = useState<SidebarTab>('thumbnails')
   const [scrollTop, setScrollTop] = useState(0)
   const [containerHeight, setContainerHeight] = useState(500)
@@ -35,10 +35,8 @@ export const Sidebar: React.FC = () => {
     setScrollTop(e.currentTarget.scrollTop)
   }
 
-  if (!isSideBarOpen) return null
-
   return (
-    <aside className="w-80 border-r bg-white flex flex-col transition-all duration-300 ease-in-out shadow-[4px_0_12px_rgba(0,0,0,0.02)] z-20">
+    <aside className="w-80 h-full border-r bg-white flex flex-col shadow-[4px_0_12px_rgba(0,0,0,0.02)]">
       {/* Sidebar Header with Tabs */}
       <div className="flex flex-col border-b bg-slate-50/50 backdrop-blur-md">
         <div className="p-4 flex items-center justify-between">

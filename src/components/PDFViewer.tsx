@@ -62,6 +62,26 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({ className }) => {
     loadPdf()
   }, [file, setNumPages, setPdfDoc])
 
+  // Initial Auto-Fit for Mobile
+  useEffect(() => {
+    if (pdfDoc && containerRef.current && window.innerWidth < 768) {
+      const calculateFit = async () => {
+        try {
+          const page = await pdfDoc.getPage(1)
+          const viewport = page.getViewport({ scale: 1.0 })
+          const containerWidth = containerRef.current?.clientWidth || 0
+          if (containerWidth > 0 && viewport.width > 0) {
+            const fitZoom = (containerWidth - 32) / viewport.width // 32px padding
+            usePdfStore.getState().setZoom(Math.min(fitZoom, 1.2))
+          }
+        } catch (err) {
+            console.error('Fit calculation error:', err)
+        }
+      }
+      calculateFit()
+    }
+  }, [pdfDoc])
+
   const renderTaskRef = useRef<pdfjsLib.RenderTask | null>(null)
 
   const renderPage = useCallback(async () => {
@@ -121,7 +141,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({ className }) => {
   if (error) return <div className="h-full flex items-center justify-center text-red-500">{error}</div>
 
   return (
-    <div ref={containerRef} className={cn("relative flex items-center justify-center p-8", className)}>
+    <div ref={containerRef} className={cn("relative flex items-center justify-center p-2 sm:p-4 lg:p-8 pb-24 sm:pb-4 lg:pb-8", className)}>
       <div className="relative shadow-2xl bg-white rounded-sm overflow-hidden">
         <canvas ref={canvasRef} />
         <div 
