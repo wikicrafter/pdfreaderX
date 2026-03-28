@@ -2,7 +2,11 @@
 
 > "Universal access to knowledge is a collective responsibility. Sustainability fuels the mission."
 
-**pdfreaderX** is a high-performance, institutional-grade document platform engineered for the modern web. It provides a specialized, private environment for the deep analysis of PDF documents, leveraging advanced browser-native capabilities to deliver a fluid and secure reading experience.
+**pdfreaderX** is a high-performance, institutional-grade document platform engineered for the modern web. It provides a specialized, private environment for the deep analysis of PDF documents, leveraging advanced browser-native capabilities to deliver a fluid and secure reading experience. 
+
+---
+> 🚀 **Future Roadmap**: Explore our [**AI Evolution Strategy (nextSteps.md)**](file:///c:/Development/pdfreaderX/nextSteps.md) for planned integrations with Local LLMs and OpenAI Neural TTS.
+---
 
 ---
 
