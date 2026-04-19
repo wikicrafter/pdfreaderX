@@ -37,3 +37,7 @@ tmp/
 
 # TypeScript
 *.tsbuildinfo
+
+
+release/
+

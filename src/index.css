@@ -60,3 +60,17 @@ body {
   border-radius: 2px;
   transition: background-color 0.1s ease;
 }
+
+/* Print Styles */
+@media print {
+  header, footer, .fixed, .absolute {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    margin: 0 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

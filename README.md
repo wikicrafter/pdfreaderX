@@ -1,99 +1,273 @@
-# pdfreaderX
+# 📄 pdfreaderX
 
-> "Universal access to knowledge is a collective responsibility. Sustainability fuels the mission."
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.1-blue?style=for-the-badge&logo=semantic-release" alt="Version">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/platform-Web%20%7C%20Electron-orange?style=for-the-badge&logo=desktop-computer" alt="Platform">
+  <img src="https://img.shields.io/badge/react-18-blue?style=for-the-badge&logo=react" alt="React">
+</p>
 
-**pdfreaderX** is a high-performance, institutional-grade document platform engineered for the modern web. It provides a specialized, private environment for the deep analysis of PDF documents, leveraging advanced browser-native capabilities to deliver a fluid and secure reading experience. 
+> *"Universal access to knowledge is a collective responsibility. Sustainability fuels the mission."*
 
----
-> 🚀 **Future Roadmap**: Explore our [**AI Evolution Strategy (nextSteps.md)**](file:///c:/Development/pdfreaderX/nextSteps.md) for planned integrations with Local LLMs and OpenAI Neural TTS.
----
-
----
-
-## ⚡ Primary Modules
-
-### 🔍 Smart Engine (TTS)
-An optimized audio synthesis layer that intelligently parses PDF text layers. 
-- **Predictive Selection**: Automatically identifies the highest quality local neural voices.
-- **Persistent Playback**: The audio engine is decoupled from the UI, allowing uninterrupted reading while navigating sidebars.
-- **Speed Control**: Real-time modulation of synthesis rates for deep comprehension.
-
-### 🛡️ Stealth Mode (Privacy)
-Designed for the security-conscious researcher. 
-- **Zero Tracking**: No external analytics, no cloud telemetry, and no data persistence.
-- **Local Rendering**: PDF.js worker is bundled locally—your documents never leave your machine.
-- **Pure Session Architecture**: Zero local footprint once the browser tab is closed.
-
-### 📱 PWA & Desktop
-Full support for Progressive Web App (PWA) standards.
-- **Standalone Mode**: Install as a native-like application on any mobile or desktop OS.
-- **Offline Capability**: Core assets are cached for immediate access without an active uplink.
-
-### 📂 Global Search & Thumbnails
-- **Instant Indexing**: Near-instant keyword search across the entire document.
-- **Sequential Rendering**: High-speed thumbnail generation for intuitive visual navigation.
+**pdfreaderX** is a high-performance, institutional-grade PDF document platform engineered for the modern web. It provides a specialized, privacy-centric environment for reading, annotating, and listening to PDF documents with advanced text-to-speech capabilities.
 
 ---
 
-## 🏗️ Technical Specification
+## ✨ What's New in v1.0.1
 
-The platform utilizes a modern, air-gapped tech stack:
-
-- **Core Runtime**: [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **Document Rendering**: [PDF.js](https://mozilla.github.io/pdf.js/) (Local Bundle)
-- **State Architecture**: [Zustand](https://zustand-demo.pmnd.rs/)
-- **Style System**: [Tailwind CSS](https://tailwindcss.com/)
-- **Mobile Packaging**: [Vite PWA Plugin](https://vite-pwa-org.netlify.app/)
-- **Iconography**: [Lucide React](https://lucide.dev/)
-
----
-
-## 🚀 Future Horizons (AI Roadmap)
-
-We are committed to the evolution of the reading experience. The following integrations are scheduled for the next major cycle:
-
-- **AI Summarization (Local)**: Integrated `Transformers.js` for on-device page summarization without API dependencies.
-- **Semantic Q&A**: Local RAG (Retrieval-Augmented Generation) for intelligent document querying.
-- **Smart Highlights**: Algorithmically driven concept extraction and importance mapping.
-- **Native OS Keys**: Support for hardware media keys (Play/Pause) via full Electron integration.
+| Feature | Description |
+|---------|-------------|
+| 🔊 **Continuous Reading** | Automatically reads through entire PDF, page by page |
+| 💾 **Audio Export** | Save TTS audio as MP3 (Google/OpenAI providers) |
+| 🎛️ **Voice Panel Redesign** | Clean UI with Prev/Next page controls |
+| 🖨️ **Print Support** | Print current page via browser dialog |
+| 🔖 **Bookmark Persistence** | Bookmarks saved to localStorage |
+| 🖥️ **Electron Desktop** | Windows .exe installer (114 MB) |
+| 🐛 **Bug Fixes** | Memory leaks, continuous mode, worker path, CORS |
 
 ---
 
-## 🤝 Join the Mission (Contribution)
+## 🚀 Key Features
 
-We invite researchers, developers, and information advocates to contribute to the evolution of **pdfreaderX**. Whether it's optimizing the Smart Engine, enhancing stealth capabilities, or refining the UI, your expertise is valuable. 
+### 1. Text-to-Speech Engine
+- **3 TTS Providers**: Browser (free), OpenAI (ultra-realistic), Google Neural2 (free tier)
+- **Continuous Mode**: Auto-reads all pages sequentially
+- **Audio Export**: Download generated audio as MP3
+- **Speed Control**: Adjustable rate (0.25x - 4.0x)
+- **Voice Selection**: Multiple voices per provider
 
-Sustainability follows the principle of collective persistence:
-1. **Fork** the repository and clone it to your local node.
-2. **Implement improvements** following our professional architectural style.
-3. **Submit a Pull Request** describing your "mission objectives".
+### 2. PDF Reading
+- 📖 High-fidelity PDF.js rendering
+- 🔍 Zoom (10% - 500%) + rotation (90° increments)
+- 📑 Page navigation (prev/next + jump to page)
+- 🔎 Search through entire document
+- 🖼️ Thumbnail sidebar
+- 🔖 Bookmarks with localStorage persistence
+- 🖨️ Print support
+
+### 3. Privacy & Security
+- 🔒 **Zero Tracking**: No analytics, no telemetry
+- 💻 **Local Processing**: PDF.js worker runs locally
+- 🔑 **API Keys**: Stored on-device only
+- 🌐 **No External Servers**: Keys go directly to OpenAI/Google
+
+### 4. Cross-Platform
+| Platform | Status | Description |
+|----------|--------|-------------|
+| 🌐 Web | ✅ | PWA installable |
+| 🪟 Windows | ✅ | .exe installer |
+| 🍎 macOS | 🔄 | Build config ready |
+| 🐧 Linux | 🔄 | Build config ready |
+| 📱 iOS/Android | ✅ | Responsive |
 
 ---
 
-## 📂 Deployment
+## 📸 Screenshots
 
-### Development
+```
+┌─────────────────────────────────────────────────────────────┐
+│  📄 pdfreaderX                              [⚙️] [🔊] [❤️]  │
+├────────────┬──────────────────────────────────────────────┤
+│            │                                              │
+│  📑        │      📄 Document Page                        │
+│  📑        │                                              │
+│  📑        │           Content area                     │
+│  📑        │           with text layer                   │
+│  📑        │                                              │
+│            │                                              │
+├────────────┴────���─────────────────────────────────────────┤
+│  [<] Page 1 of 10 [>]  [🔖]  [100%]  [⟳]  [📂]  [🖨️]    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ Installation
+
+### Quick Start (Web)
 ```bash
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
+
+# Open http://localhost:5173
 ```
 
-### Production Build
+### Production Build (Web)
 ```bash
+# Build for production
 npm run build
+
+# Output: dist/ folder
+```
+
+### Electron Desktop App
+```bash
+# Development mode
+npm run electron:dev
+
+# Build Windows installer
+npm run electron:build
+
+# Output: release/PDFReaderX Setup 1.0.1.exe
 ```
 
 ---
 
-## Support & Sustainability
+## ⚙️ Configuration
 
-If you find pdfreaderX valuable, sustainability of the node is ensured through community support.
+### Text-to-Speech Providers
 
-- **[STAR_REPO]**: Star this repository to help others discover the platform.
-- **[DEPLOY_FUNDS]**: [Access Ko-fi Gateway](https://ko-fi.com/gigaa) (Fuel the research).
-- **[SYNC_UPDATES]**: Follow on GitHub to receive the latest payloads.
+| Provider | Quality | Cost | Audio Export |
+|----------|---------|------|--------------|
+| **Browser** | Good | Free | ❌ | 
+| **OpenAI** | Ultra-realistic | Pay-per-use | ✅ |
+| **Google** | Neural2 | Free tier | ✅ |
+
+### Getting API Keys
+
+**OpenAI** (https://platform.openai.com/api-keys)
+```
+- Model: tts-1
+- Cost: ~$0.003/1,000 characters
+- Voices: alloy, echo, fable, onyx, nova, shimmer
+```
+
+**Google Cloud** (https://cloud.google.com/text-to-speech)
+```
+- Free tier: 4M characters/month
+- Premium: $4/1M characters
+- Voices: Neural2 (18 languages)
+```
 
 ---
 
-Developed by **wikicrafter** // v1.0.0  
-Distributed under the MIT License © 2026.
+## 📁 Project Structure
+
+```
+pdfreaderX/
+├── src/
+│   ├── components/
+│   │   ├── Controls/
+│   │   │   ├── Toolbar.tsx       # Main toolbar
+│   │   │   └── VoicePanel.tsx    # TTS controls
+│   │   ├── PDFViewer.tsx         # PDF rendering
+│   │   ├── Sidebar.tsx           # Navigation
+│   │   ├── Thumbnail.tsx        # Page thumbnails
+│   │   └── Settings/
+│   │       └── SettingsModal.tsx # Settings
+│   ├── hooks/
+│   │   └── useSpeech.ts        # TTS logic
+│   ├── store/
+│   │   └── usePdfStore.ts     # Zustand state
+│   └── App.tsx                # Main app
+├── electron/
+│   ├── main.cjs               # Electron main
+│   └── preload.cjs            # Preload script
+├── dist/                      # Built web files
+├── release/                   # Built executables
+├── package.json
+├── vite.config.ts
+└── README.md
+```
+
+---
+
+## 🐛 Known Limitations
+
+| Issue | Status | Workaround |
+|-------|--------|------------|
+| Large PDFs (>50MB) | ⚠️ May be slow | Use local files |
+| Browser TTS export | ❌ Not supported | Switch to Google/OpenAI |
+| Print formatting | ⚠️ Browser-dependent | Adjust zoom before print |
+| Shared devices | ⚠️ Keys visible | Clear localStorage |
+
+---
+
+## 🔮 Future Roadmap
+
+### v1.0.2 (Enhancements)
+- [ ] Error boundaries for better error handling
+- [ ] Keyboard shortcuts (arrow keys for navigation)
+- [ ] Recent files history
+- [ ] Dark mode toggle
+
+### v1.1 (Advanced Features)
+- [ ] Table of Contents extraction (PDF outline)
+- [ ] Persistent text highlights/annotations
+- [ ] Multi-page audio batch export
+- [ ] Custom page range selection
+
+### v1.2 (AI Integration)
+- [ ] Local LLM via Ollama for Q&A
+- [ ] Transformers.js summarization
+- [ ] RAG-based semantic search
+- [ ] Auto-summarize pages
+
+### v1.3 (Native Desktop)
+- [ ] System tray (minimize to tray)
+- [ ] Global media key support
+- [ ] File association (.pdf)
+- [ ] Auto-updater
+- [ ] macOS/Linux builds
+
+---
+
+## 🤝 Support & Contribution
+
+### Found pdfreaderX Valuable?
+
+| Action | Link |
+|-------|------|
+| ⭐ Star the repo | https://github.com/anomalyco/pdfreaderX |
+| 💰 Support | https://ko-fi.com/gigaa |
+| 🔔 Follow | https://github.com/anomalyco/pdfreaderX |
+
+### Need Help?
+
+1. Check browser console for errors
+2. Verify API keys in Settings → Voice Engine
+3. Try local PDF files first
+4. Clear localStorage to reset: `localStorage.clear()`
+
+---
+
+## 📜 License
+
+```
+MIT License
+
+Copyright (c) 2026 pdfreaderX
+Copyright (c) 2026 wikicrafter
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+---
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Built%20with-React%20%2B%20Electron-blue?style=for-the-badge&logo=react" alt="Built with">
+  <img src="https://img.shields.io/badge/Made%20with-💜-red?style=for-the-badge" alt="Made with love">
+</p>
+
+**Version**: 1.0.1  
+**Author**: [wikicrafter](https://github.com/anomalyco)  
+**License**: MIT © 2026

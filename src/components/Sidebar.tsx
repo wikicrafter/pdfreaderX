@@ -35,7 +35,7 @@ export const Sidebar: React.FC = () => {
     setScrollTop(e.currentTarget.scrollTop)
   }
 
-  return (
+return (
     <aside className="w-80 h-full border-r bg-white flex flex-col shadow-[4px_0_12px_rgba(0,0,0,0.02)]">
       {/* Sidebar Header with Tabs */}
       <div className="flex flex-col border-b bg-slate-50/50 backdrop-blur-md">

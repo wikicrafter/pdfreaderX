@@ -2,7 +2,6 @@ import * as React from 'react'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as pdfjsLib from 'pdfjs-dist'
 import { usePdfStore } from '../store/usePdfStore'
-import { useSpeech } from '../hooks/useSpeech'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -10,7 +9,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.mjs'
 
 interface PDFViewerProps {
   className?: string
@@ -21,23 +20,9 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({ className }) => {
   const textLayerRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   
-  const { file, pageNum, setNumPages, zoom, rotation, pdfDoc, setPdfDoc, isReading } = usePdfStore()
-  const { speak } = useSpeech()
+  const { file, pageNum, setNumPages, zoom, rotation, pdfDoc, setPdfDoc } = usePdfStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Auto-read next page
-  useEffect(() => {
-    if (isReading && !loading && !error && textLayerRef.current) {
-        const timer = setTimeout(() => {
-            const textContent = textLayerRef.current?.innerText || ''
-            if (textContent.trim()) {
-                speak(textContent)
-            }
-        }, 500)
-        return () => clearTimeout(timer)
-    }
-  }, [pageNum, isReading, loading, error, speak])
 
   useEffect(() => {
     if (!file) return
@@ -142,11 +127,12 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({ className }) => {
 
   return (
     <div ref={containerRef} className={cn("relative flex items-center justify-center p-2 sm:p-4 lg:p-8 pb-24 sm:pb-4 lg:pb-8", className)}>
-      <div className="relative shadow-2xl bg-white rounded-sm overflow-hidden">
+      <div className="relative shadow-2xl bg-white rounded-sm overflow-hidden" id="print-content">
         <canvas ref={canvasRef} />
         <div 
           ref={textLayerRef} 
           className="absolute top-0 left-0 pointer-events-auto select-text opacity-50"
+          id="pdf-text-layer"
           onMouseUp={() => {
             const selection = window.getSelection()?.toString().trim()
             if (selection) usePdfStore.getState().setSelectedText(selection)

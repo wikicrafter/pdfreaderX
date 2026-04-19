@@ -6,7 +6,8 @@ import {
   ZoomOut, 
   RotateCw, 
   Upload,
-  Bookmark
+  Bookmark,
+  Printer
 } from 'lucide-react'
 import { usePdfStore } from '../../store/usePdfStore'
 
@@ -32,6 +33,10 @@ export const Toolbar: React.FC = () => {
       }
       reader.readAsArrayBuffer(file)
     }
+  }
+
+  const handlePrint = () => {
+    window.print()
   }
 
   return (
@@ -69,6 +74,7 @@ export const Toolbar: React.FC = () => {
         <div className="w-[1px] h-5 bg-slate-200 mx-1" />
         <div className="flex items-center gap-1">
           <button onClick={() => setRotation(rotation + 90)} className="p-1.5 hover:bg-slate-100 rounded-xl transition-all text-slate-500"><RotateCw size={14} /></button>
+          <button onClick={handlePrint} className="p-1.5 hover:bg-slate-100 rounded-xl transition-all text-slate-500" title="Print"><Printer size={14} /></button>
           <label className="p-1.5 hover:bg-primary-50 hover:text-primary-600 rounded-xl transition-all text-slate-500 cursor-pointer">
             <Upload size={14} />
             <input type="file" className="hidden" accept="application/pdf" onChange={handleFileChange} />
