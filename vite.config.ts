@@ -8,6 +8,8 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      manifestFilename: 'manifest.json',
+      injectManifest: true,
       injectRegister: 'auto',
       includeAssets: ['favicon.svg', 'pwa-512x512.png', 'pdf.worker.min.mjs'],
       manifest: {
