@@ -27,6 +27,19 @@
 
 ---
 
+## 📥 Download
+
+### Windows Desktop App
+| Type | File | Size |
+|------|------|------|
+| Installer | [PDFReaderX Setup 1.0.1.exe](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.1/PDFReaderX%20Setup%201.0.1.exe) | 119 MB |
+| Portable | [PDFReaderX-1.0.1-portable.zip](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.1/PDFReaderX-1.0.1-portable.zip) | 173 MB |
+
+### Web Version
+Access the **pdfreaderX** web app directly at: https://pdfreaderX.github.io
+
+---
+
 ## 🚀 Key Features
 
 ### 1. Text-to-Speech Engine
