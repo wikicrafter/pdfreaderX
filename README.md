@@ -258,5 +258,5 @@ THE SOFTWARE.
 </p>
 
 **Version**: 1.0.1  
-**Author**: [wikicrafter](https://github.com/anomalyco)  
+**Author**: [wikicrafter](https://github.com/wikicrafter)  
 **License**: MIT © 2026
