@@ -36,7 +36,7 @@
 | Portable | [PDFReaderX-1.0.1-portable.zip](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.1/PDFReaderX-1.0.1-portable.zip) | 173 MB |
 
 ### Web Version
-Access the **pdfreaderX** web app directly at: https://pdfreaderX.github.io
+Access the **pdfreaderX** web app directly at: pdfreaderx.itforsec.com/
 
 ---
 
