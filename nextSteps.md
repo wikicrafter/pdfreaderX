@@ -58,4 +58,4 @@ We invite the community to pick a "Phase" and start building. **pdfreaderX** is 
 
 ---
 
-*WikiCrafter Node // v1.0.0 Release // 2026*
+*WikiCrafter Node // v1.0.1 Release // 2026*

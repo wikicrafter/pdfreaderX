@@ -151,7 +151,7 @@ export default function App() {
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /> <span className="hidden xs:inline">System Online</span></span>
         </div>
-        <div>v1.0.0</div>
+        <div>v1.0.1</div>
       </footer>
     </div>
   )
