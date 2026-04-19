@@ -64,21 +64,10 @@
 
 ## 📸 Screenshots
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  📄 pdfreaderX                              [⚙️] [🔊] [❤️]  │
-├────────────┬──────────────────────────────────────────────┤
-│            │                                              │
-│  📑        │      📄 Document Page                        │
-│  📑        │                                              │
-│  📑        │           Content area                     │
-│  📑        │           with text layer                   │
-│  📑        │                                              │
-│            │                                              │
-├────────────┴────���─────────────────────────────────────────┤
-│  [<] Page 1 of 10 [>]  [🔖]  [100%]  [⟳]  [📂]  [🖨️]    │
-└─────────────────────────────────────────────────────────────┘
-```
+
+<img width="1841" height="903" alt="image" src="https://github.com/user-attachments/assets/5452d56b-2d9a-4070-9fd7-5d33e420429f" />
+
+
 
 ---
 
@@ -123,7 +112,7 @@ npm run electron:build
 | Provider | Quality | Cost | Audio Export |
 |----------|---------|------|--------------|
 | **Browser** | Good | Free | ❌ | 
-| **OpenAI** | Ultra-realistic | Pay-per-use | ✅ |
+| **OpenAI** | Ultra-realistic | Pay-per-use | ✅ 
 | **Google** | Neural2 | Free tier | ✅ |
 
 ### Getting API Keys
@@ -221,9 +210,9 @@ pdfreaderX/
 
 | Action | Link |
 |-------|------|
-| ⭐ Star the repo | https://github.com/anomalyco/pdfreaderX |
+| ⭐ Star the repo | https://github.com/wikicrafter/pdfreaderX |
 | 💰 Support | https://ko-fi.com/gigaa |
-| 🔔 Follow | https://github.com/anomalyco/pdfreaderX |
+| 🔔 Follow | https://github.com/wikicrafter/pdfreaderX |
 
 ### Need Help?
 
