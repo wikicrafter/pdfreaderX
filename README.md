@@ -1,7 +1,7 @@
 # 📄 pdfreaderX
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.2-blue?style=for-the-badge&logo=semantic-release" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.0.1-blue?style=for-the-badge&logo=semantic-release" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/platform-Web%20%7C%20PWA%20%7C%20Electron-orange?style=for-the-badge&logo=desktop-computer" alt="Platform">
   <img src="https://img.shields.io/badge/react-18-blue?style=for-the-badge&logo=react" alt="React">
@@ -13,7 +13,7 @@
 
 ---
 
-## ✨ What's New in v1.0.2
+## ✨ What's New in v1.0.1
 
 | Feature | Description |
 |---------|-------------|
@@ -33,12 +33,10 @@
 ### Windows Desktop App
 | Type | File | Size |
 |------|------|------|
-| Installer | [PDFReaderX Setup 1.0.2.exe](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.2/PDFReaderX.Setup.1.0.2.exe) | ~120 MB |
+| Installer | [PDFReaderX Setup 1.0.1.exe](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.1/PDFReaderX.Setup.1.0.1.exe) | ~120 MB |
 
 ### Web Version
-Access the **pdfreaderX** web app directly at:
-- https://pdfreaderx.itforsec.com/
-- https://pdfreaderx.netlify.app/
+Access the **pdfreaderX** web app directly at: pdfreaderx.itforsec.com/
 
 ---
 
@@ -120,7 +118,7 @@ npm run electron:dev
 # Build Windows installer
 npm run electron:build
 
-# Output: release/PDFReaderX Setup 1.0.2.exe
+# Output: release/PDFReaderX Setup 1.0.1.exe
 ```
 
 ---
@@ -277,6 +275,6 @@ THE SOFTWARE.
   <img src="https://img.shields.io/badge/Made%20with-💜-red?style=for-the-badge" alt="Made with love">
 </p>
 
-**Version**: 1.0.2  
+**Version**: 1.0.1  
 **Author**: [wikicrafter](https://github.com/wikicrafter)  
 **License**: MIT © 2026
