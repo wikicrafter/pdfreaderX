@@ -15,7 +15,7 @@ export const Sidebar: React.FC = () => {
   const [containerHeight, setContainerHeight] = useState(500)
   const containerRef = React.useRef<HTMLDivElement>(null)
 
-  const ITEM_HEIGHT = 440 // Robust estimate for thumbnail + padding + text
+  const ITEM_HEIGHT = 460 // Balanced quality and size
   const BUFFER = 2
 
   const progressPercent = numPages > 0 ? Math.round((maxPageSeen / numPages) * 100) : 0
@@ -94,6 +94,7 @@ return (
                 <Bookmark size={14} />
                 Saved
             </button>
+            
         </div>
       </div>
       
@@ -159,3 +160,5 @@ return (
     </aside>
   )
 }
+
+

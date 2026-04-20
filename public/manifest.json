@@ -1,0 +1,33 @@
+{
+  "name": "pdfreaderX - Modern PDF Reader",
+  "short_name": "pdfreaderX",
+  "description": "An institutional-grade, privacy-centric PDF platform with high-performance rendering and smart TTS audio engine.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#1E3A8A",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Open PDF",
+      "short_name": "Open",
+      "description": "Open a PDF file",
+      "url": "/"
+    }
+  ]
+}

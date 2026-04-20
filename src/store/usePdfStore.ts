@@ -141,7 +141,7 @@ interface PdfState {
 }
 
 export const usePdfStore = create<PdfState>((set) => ({
-  file: 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf',
+  file: '/quotes.pdf',
   pageNum: 1,
   numPages: 0,
   zoom: 1.0,

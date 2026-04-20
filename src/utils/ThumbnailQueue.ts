@@ -29,7 +29,7 @@ class ThumbnailQueue {
 
     try {
       const page = await item.pdfDoc.getPage(item.pageNumber)
-      const scale = 0.2 // Lower scale for thumbnails
+      const scale = 0.35 // Better quality thumbnails
       const viewport = page.getViewport({ scale })
 
       const canvas = document.createElement('canvas')
