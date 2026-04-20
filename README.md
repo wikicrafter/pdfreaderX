@@ -1,9 +1,9 @@
 # 📄 pdfreaderX
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.1-blue?style=for-the-badge&logo=semantic-release" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.0.2-blue?style=for-the-badge&logo=semantic-release" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/platform-Web%20%7C%20Electron-orange?style=for-the-badge&logo=desktop-computer" alt="Platform">
+  <img src="https://img.shields.io/badge/platform-Web%20%7C%20PWA%20%7C%20Electron-orange?style=for-the-badge&logo=desktop-computer" alt="Platform">
   <img src="https://img.shields.io/badge/react-18-blue?style=for-the-badge&logo=react" alt="React">
 </p>
 
@@ -13,17 +13,18 @@
 
 ---
 
-## ✨ What's New in v1.0.1
+## ✨ What's New in v1.0.2
 
 | Feature | Description |
 |---------|-------------|
+| 📴 **Offline Mode** | Read PDFs without internet after first load |
+| 📱 **PWA** | Install as native app on any device |
+| 📄 **Local Default PDF** | Built-in motivational quotes document |
 | 🔊 **Continuous Reading** | Automatically reads through entire PDF, page by page |
 | 💾 **Audio Export** | Save TTS audio as MP3 (Google/OpenAI providers) |
-| 🎛️ **Voice Panel Redesign** | Clean UI with Prev/Next page controls |
 | 🖨️ **Print Support** | Print current page via browser dialog |
-| 🔖 **Bookmark Persistence** | Bookmarks saved to localStorage |
-| 🖥️ **Electron Desktop** | Windows .exe installer (114 MB) |
-| 🐛 **Bug Fixes** | Memory leaks, continuous mode, worker path, CORS |
+| 🖥️ **Electron Desktop** | Windows .exe installer |
+| 🐛 **Bug Fixes** | Thumbnail quality, thumbnail rendering improvements |
 
 ---
 
@@ -32,11 +33,12 @@
 ### Windows Desktop App
 | Type | File | Size |
 |------|------|------|
-| Installer | [PDFReaderX Setup 1.0.1.exe](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.1/PDFReaderX.Setup.1.0.1.exe) | 119 MB |
-| Portable | [PDFReaderX-1.0.1-portable.zip](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.1/PDFReaderX-1.0.1-portable.zip) | 173 MB |
+| Installer | [PDFReaderX Setup 1.0.2.exe](https://github.com/wikicrafter/pdfreaderX/releases/download/v1.0.2/PDFReaderX.Setup.1.0.2.exe) | ~120 MB |
 
 ### Web Version
-Access the **pdfreaderX** web app directly at: pdfreaderx.itforsec.com/
+Access the **pdfreaderX** web app directly at:
+- https://pdfreaderx.itforsec.com/
+- https://pdfreaderx.netlify.app/
 
 ---
 
@@ -64,7 +66,12 @@ Access the **pdfreaderX** web app directly at: pdfreaderx.itforsec.com/
 - 🔑 **API Keys**: Stored on-device only
 - 🌐 **No External Servers**: Keys go directly to OpenAI/Google
 
-### 4. Cross-Platform
+### 4. PWA & Offline
+- 📱 **Installable**: Add to home screen on any device
+- 📴 **Offline**: Works without internet after first load
+- 🔄 **Auto-Update**: Service worker updates in background
+
+### 5. Cross-Platform
 | Platform | Status | Description |
 |----------|--------|-------------|
 | 🌐 Web | ✅ | PWA installable |
@@ -113,7 +120,7 @@ npm run electron:dev
 # Build Windows installer
 npm run electron:build
 
-# Output: release/PDFReaderX Setup 1.0.1.exe
+# Output: release/PDFReaderX Setup 1.0.2.exe
 ```
 
 ---
@@ -270,6 +277,6 @@ THE SOFTWARE.
   <img src="https://img.shields.io/badge/Made%20with-💜-red?style=for-the-badge" alt="Made with love">
 </p>
 
-**Version**: 1.0.1  
+**Version**: 1.0.2  
 **Author**: [wikicrafter](https://github.com/wikicrafter)  
 **License**: MIT © 2026
