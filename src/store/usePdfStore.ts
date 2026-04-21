@@ -140,8 +140,12 @@ interface PdfState {
   resetApiKeys: () => void
 }
 
+const isElectron = typeof window !== 'undefined' && /Electron/.test(navigator.userAgent)
+const DEFAULT_PDF_URL = 'https://raw.githubusercontent.com/wikicrafter/example/main/quotes.pdf'
+const defaultFile = isElectron ? DEFAULT_PDF_URL : '/quotes.pdf'
+
 export const usePdfStore = create<PdfState>((set) => ({
-  file: '/quotes.pdf',
+  file: defaultFile,
   pageNum: 1,
   numPages: 0,
   zoom: 1.0,

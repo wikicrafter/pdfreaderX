@@ -1,18 +1,13 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW registered:', reg.scope))
-      .catch(err => console.log('SW registration failed:', err))
-  })
+console.log('Main TSX loading...')
+
+const rootElement = document.getElementById('root')
+if (!rootElement) {
+  document.body.innerHTML = '<h1>Root element not found!</h1>'
+  throw new Error('Root element not found')
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+ReactDOM.createRoot(rootElement).render(<App />)

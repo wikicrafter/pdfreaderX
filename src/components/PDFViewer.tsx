@@ -4,12 +4,45 @@ import * as pdfjsLib from 'pdfjs-dist'
 import { usePdfStore } from '../store/usePdfStore'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { Upload, FileText } from 'lucide-react'
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.mjs'
+const workerPath = './pdf.worker.min.mjs'
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath
+console.log('PDF worker path:', workerPath)
+
+const WelcomeScreen: React.FC = () => {
+  const setFile = usePdfStore((state) => state.setFile)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        if (ev.target?.result) setFile(ev.target.result)
+      }
+      reader.readAsArrayBuffer(file)
+    }
+  }
+
+  return (
+    <div className="h-full flex flex-col items-center justify-center text-slate-500 bg-slate-50">
+      <FileText size={64} className="mb-4 text-slate-300" />
+      <h2 className="text-xl font-bold mb-2">pdfreaderX</h2>
+      <p className="text-sm mb-6 text-slate-400 max-w-xs text-center">
+        Upload your PDF file to get started. Works completely offline once installed.
+      </p>
+      <label className="px-6 py-3 bg-primary-600 text-white rounded-xl cursor-pointer hover:bg-primary-700 transition-colors flex items-center gap-2">
+        <Upload size={18} />
+        Upload PDF
+        <input type="file" accept="application/pdf" className="hidden" onChange={handleFileChange} />
+      </label>
+    </div>
+  )
+}
 
 interface PDFViewerProps {
   className?: string
@@ -23,6 +56,11 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({ className }) => {
   const { file, pageNum, setNumPages, zoom, rotation, pdfDoc, setPdfDoc } = usePdfStore()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Show welcome screen on Electron when no file loaded
+  if (!file && !pdfDoc) {
+    return <WelcomeScreen />
+  }
 
   useEffect(() => {
     if (!file) return

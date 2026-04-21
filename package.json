@@ -11,7 +11,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "electron:dev": "vite build && electron .",
+    "electron:dev": "vite --port 5173 & npx electron . --dev",
     "electron:build": "vite build && electron-builder build --win --publish never",
     "electron:build:mac": "vite build && electron-builder build --mac --publish never",
     "electron:build:linux": "vite build && electron-builder build --linux --publish never"
@@ -37,6 +37,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "pdfkit": "^0.18.0",
     "png-to-ico": "^3.0.1",
     "postcss": "^8.4.38",
     "sharp": "^0.34.5",
@@ -53,6 +54,7 @@
     },
     "files": [
       "dist/**/*",
+      "dist/*.pdf",
       "electron/**/*",
       "public/**/*"
     ],
