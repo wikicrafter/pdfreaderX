@@ -29,8 +29,13 @@ function createWindow() {
     mainWindow.loadFile(distPath);
   }
 
+  // Enable logging
+  mainWindow.webContents.on('console-message', (event, level, message) => {
+    console.log('PDFReader:', message);
+  });
+
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
-    console.error('Failed to load:', errorCode, errorDescription);
+    console.error('Load error:', errorCode, errorDescription);
   });
 
   mainWindow.on('closed', () => {
